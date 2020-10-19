@@ -45,12 +45,52 @@ class GameFragment : Fragment() {
     private fun initViews(){
         ivRock.setOnClickListener{
             ivYou.setImageResource(R.drawable.rock)
+            rockPaperScissors(ROCK)
         }
         ivPaper.setOnClickListener{
             ivYou.setImageResource(R.drawable.paper)
+            rockPaperScissors(PAPER)
         }
         ivScissors.setOnClickListener{
             ivYou.setImageResource(R.drawable.scissors)
+            rockPaperScissors(SCISSORS)
         }
+    }
+
+    private fun rockPaperScissors(chosenOption: Int){
+        val random = (0..2).random()
+
+        when(random) {
+            0 -> ivComputer.setImageResource(R.drawable.rock)
+            1 -> ivComputer.setImageResource(R.drawable.paper)
+            2 -> ivComputer.setImageResource(R.drawable.scissors)
+        }
+
+        when(chosenOption){
+            ROCK -> {
+                when(random){
+                    ROCK -> tvResult.text = getString(R.string.draw)
+                    PAPER -> tvResult.text = getString(R.string.you_lose)
+                    SCISSORS -> tvResult.text = getString(R.string.you_win)
+                }
+            }
+
+            PAPER -> {
+                when(random){
+                    ROCK -> tvResult.text = getString(R.string.you_win)
+                    PAPER -> tvResult.text = getString(R.string.draw)
+                    SCISSORS -> tvResult.text = getString(R.string.you_lose)
+                }
+            }
+
+            SCISSORS -> {
+                when(random){
+                    ROCK -> tvResult.text = getString(R.string.you_lose)
+                    PAPER -> tvResult.text = getString(R.string.you_win)
+                    SCISSORS -> tvResult.text = getString(R.string.draw)
+                }
+            }
+        }
+
     }
 }

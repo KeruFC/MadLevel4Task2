@@ -8,9 +8,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.view.menu.MenuView
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_game.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
 const val ROCK = 0
 const val PAPER = 1
@@ -22,6 +27,7 @@ const val SCISSORS = 2
 class GameFragment : Fragment() {
 
     private var playerOption : Int = 0
+    private var result : String = " "
     private lateinit var gameRepository: GameRepository
     private val mainScope = CoroutineScope(Dispatchers.Main)
 
@@ -37,23 +43,27 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         gameRepository = GameRepository(requireContext())
         initViews()
-//        view.findViewById<Button>(R.id.button_first).setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
+
+        view.findViewById<FloatingActionButton>(R.id.btHistory).setOnClickListener {
+            findNavController().navigate(R.id.action_gameFragment_to_gamesPlayedFragment2)
+        }
     }
 
     private fun initViews(){
         ivRock.setOnClickListener{
+            playerOption = ROCK
             ivYou.setImageResource(R.drawable.rock)
-            rockPaperScissors(ROCK)
+            rockPaperScissors(playerOption)
         }
         ivPaper.setOnClickListener{
+            playerOption = PAPER
             ivYou.setImageResource(R.drawable.paper)
-            rockPaperScissors(PAPER)
+            rockPaperScissors(playerOption)
         }
         ivScissors.setOnClickListener{
+            playerOption = SCISSORS
             ivYou.setImageResource(R.drawable.scissors)
-            rockPaperScissors(SCISSORS)
+            rockPaperScissors(playerOption)
         }
     }
 
@@ -69,28 +79,73 @@ class GameFragment : Fragment() {
         when(chosenOption){
             ROCK -> {
                 when(random){
-                    ROCK -> tvResult.text = getString(R.string.draw)
-                    PAPER -> tvResult.text = getString(R.string.you_lose)
-                    SCISSORS -> tvResult.text = getString(R.string.you_win)
+                    ROCK -> {
+                        tvResult.text = getString(R.string.draw)
+                        result = "draw"
+                    }
+                    PAPER -> {
+                        tvResult.text = getString(R.string.you_lose)
+                        result = "lose"
+                    }
+                    SCISSORS -> {
+                        tvResult.text = getString(R.string.you_win)
+                        result = "win"
+                    }
                 }
             }
 
             PAPER -> {
                 when(random){
-                    ROCK -> tvResult.text = getString(R.string.you_win)
-                    PAPER -> tvResult.text = getString(R.string.draw)
-                    SCISSORS -> tvResult.text = getString(R.string.you_lose)
+                    ROCK -> {
+                        tvResult.text = getString(R.string.you_win)
+                        result = "win"
+                    }
+                    PAPER -> {
+                        tvResult.text = getString(R.string.draw)
+                        result = "draw"
+                    }
+                    SCISSORS -> {
+                        tvResult.text = getString(R.string.you_lose)
+                        result = "lose"
+                    }
                 }
             }
 
             SCISSORS -> {
                 when(random){
-                    ROCK -> tvResult.text = getString(R.string.you_lose)
-                    PAPER -> tvResult.text = getString(R.string.you_win)
-                    SCISSORS -> tvResult.text = getString(R.string.draw)
+                    ROCK -> {
+                        tvResult.text = getString(R.string.you_lose)
+                        result = "lose"
+                    }
+                    PAPER -> {
+                        tvResult.text = getString(R.string.you_win)
+                        result = "win"
+                    }
+                    SCISSORS -> {
+                        tvResult.text = getString(R.string.draw)
+                        result = "draw"
+                    }
                 }
             }
         }
 
+        mainScope.launch {
+            val date = Date().toString()
+
+            val game = Game(
+                playerMove = playerOption,
+                computerMove = random,
+                result = result,
+                matchDate = date
+            )
+
+            withContext(Dispatchers.IO) {
+                gameRepository.insertGame(game)
+            }
+
+            val allGames = withContext(Dispatchers.IO) {
+                gameRepository.getAllGames()
+            }
+        }
     }
 }

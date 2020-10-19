@@ -7,6 +7,16 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <string name="welcome">Welcome</string>
+    <string name="all_time_statistics">Your all time statistics</string>
+    <string name="vs">V.S.</string>
+    <string name="you_lose">You Lose</string>
+    <string name="draw">Draw</string>
+    <string name="you_win">You win</string>
+    <string name="instructions">Instructions: select rock, paper or scissors to play.</string>
+    <string name="statistics">Win: %d  Draw: %d  Lose: %d</string>
+    <string name="you">You</string>
+    <string name="computer">Computer</string>
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

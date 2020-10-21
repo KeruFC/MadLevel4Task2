@@ -44,9 +44,9 @@ class GameFragment : Fragment() {
         gameRepository = GameRepository(requireContext())
         initViews()
 
-        view.findViewById<FloatingActionButton>(R.id.btHistory).setOnClickListener {
-            findNavController().navigate(R.id.action_gameFragment_to_gamesPlayedFragment2)
-        }
+//        view.findViewById<FloatingActionButton>(R.id.btHistory).setOnClickListener {
+//            findNavController().navigate(R.id.action_gameFragment_to_gamesPlayedFragment2)
+//        }
     }
 
     private fun initViews(){

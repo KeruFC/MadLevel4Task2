@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_games_played.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,12 +36,10 @@ class GamesPlayedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         gameRepository = GameRepository(requireContext())
         initRv()
         getGamesPlayedFromDatabase()
-        view.findViewById<FloatingActionButton>(R.id.btDelete).setOnClickListener {
-            clearGamesPlayedHistory()
-        }
     }
 
     private fun initRv() {
@@ -51,6 +50,16 @@ class GamesPlayedFragment : Fragment() {
             DividerItemDecoration(context,
                 DividerItemDecoration.VERTICAL)
         )
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.btDelete -> {
+                clearGamesPlayedHistory()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun getGamesPlayedFromDatabase() {
@@ -75,6 +84,6 @@ class GamesPlayedFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_main, menu)
+        inflater.inflate(R.menu.menu_history, menu)
     }
 }
